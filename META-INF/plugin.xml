@@ -1,0 +1,155 @@
+<idea-plugin version="2">
+  <id>com.applego.sequent</id>
+  <name>Sequent</name>
+  <version>0.1</version>
+  <vendor email="pavlin@email.cz" url="http://www.pavlin.org">Pavlin</vendor>
+
+  <description><![CDATA[
+      Enter short description for your plugin here.<br>
+      <em>most HTML tags may be used</em>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+  <idea-version since-build="131"/>
+
+  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Plugin+Compatibility+with+IntelliJ+Platform+Products
+       on how to target different products -->
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.lang</depends>
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+
+  <application-components>
+        <component>
+            <implementation-class>org.ideaplugins.svgviewer.controller.application.SvgConfiguration</implementation-class>
+        </component>
+  </application-components>
+
+  <actions>
+      <group id="Sequent.MarkupActionGroup" class="com.applego.sequent.plugin.action.SequentMarkupActionGroup"
+             text="Sequence diagrams markup and metadata actions" description="Sequence diagram metadata actions" icon="/images/sequent13.gif" popup="true">
+
+<!--
+          <action id="Sequent.LinkToClass" class="com.applego.sequent.plugin.action.LinkClassInCurrentEditorToActorAction"
+                  text="Link selected actor to project class" description="Link actor under caret to existing class"
+                  icon="/images/uml.png">
+              <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt L" second-keystroke="ctrl alt A"/>
+          </action>
+-->
+          <action id="Sequent.LinkToMethod" class="com.applego.sequent.plugin.action.LinkMessageToMethodAction"
+                  text="Link selected message to class method" description="Link message under caret to class method"
+                  icon="/images/uml.png">
+              <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt L" second-keystroke="ctrl alt A"/>
+          </action>
+          <action id="Sequent.CreateClassForActor" class="com.applego.sequent.plugin.action.CreateClassForActorAction"
+                  text="Link selected message to class method" description="Link message under caret to class method"
+                  icon="/images/uml.png">
+              <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt L" second-keystroke="ctrl alt A"/>
+          </action>
+          <action id="Sequent.CreateMethodForMessageActor" class="com.applego.sequent.plugin.action.CreateMethodForMessageAction"
+                  text="Link selected message to class method" description="Link message under caret to class method"
+                  icon="/images/uml.png">
+              <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt L" second-keystroke="ctrl alt A"/>
+          </action>
+      </group>
+
+      <group id="Sequent.DiagramActionGroup" class="com.applego.sequent.plugin.action.SequentDiagramActionGroup"
+             text="Sequent Uml diagram actions" description="Create, Open .. sequent diagram actions" icon="/images/uml.png" popup="true">
+
+        <add-to-group group-id="AnalyzeMenu" anchor="last"/>
+
+        <action id="Sequent.NewSequenceDiagram" class="com.applego.sequent.plugin.action.NewSequenceDiagramAction"
+                text="Start new sequence diagram" description="Start new sequence diagram using method under caret"
+                icon="/images/uml.png">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt P" second-keystroke="ctrl alt N"/>
+        </action>
+
+        <action id="Sequent.OpenSequenceDiagram" class="com.applego.sequent.plugin.action.OpenSequenceDiagramAction"
+                text="Open sequence diagram" description="Open existing sequence diagram"
+                icon="/images/uml.png">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt P" second-keystroke="shift ctrl alt O"/>
+        </action>
+
+        <action id="Sequent.AddMethod" class="com.applego.sequent.plugin.action.AddMethodToSequenceDiagram"
+                text="Add method to sequence diagram" description="Add method under caret to the current sequence diagram"
+                icon="/images/uml.png">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt P" second-keystroke="shift ctrl alt M"/>
+        </action>
+      </group>
+
+      <group id="PlantUML.Toolbar" description="PlantUML toolbar">
+          <action id="PlantUML.CopyToClipboard" description="Copy current diagram to clipboard"
+                  class="org.plantuml.idea.action.CopyDiagramToClipboardAction"
+                  icon="/actions/copy.png" text="Copy current diagram to clipboard"
+                  />
+          <action id="PlantUML.SaveToFile" description="Save current diagram only"
+                  class="org.plantuml.idea.action.SaveDiagramToFileAction"
+                  icon="/actions/menu-saveall.png" text="Save current diagram only"/>
+          <action id="PlantUML.SaveAllToFile" description="Save all diagrams"
+                  class="org.plantuml.idea.action.SaveAllDiagramToFileAction"
+                  icon="/actions/export.png" text="Save all diagrams in current file"/>
+          <separator/>
+
+          <action id="PlantUML.ZoomIn" description="Zoom In" class="org.plantuml.idea.action.ZoomInAction"
+                  icon="/graph/zoomIn.png" text="Zoom In"/>
+          <action id="PlantUML.ZoomOut" description="Zoom In" class="org.plantuml.idea.action.ZoomOutAction"
+                  icon="/graph/zoomOut.png" text="Zoom Out"/>
+          <action id="PlantUML.ZoomActual" description="Actual Zoom" class="org.plantuml.idea.action.ZoomActualAction"
+                  icon="/graph/actualZoom.png" text="Actual Zoom"/>
+          <separator/>
+      </group>
+
+      <action id="ViewSVGEmbed"
+              class="org.ideaplugins.svgviewer.controller.actions.SVGViewerAction"
+              text="View Image"
+              icon="/org/ideaplugins/svgviewer/resources/SvgViewerToolWindow.png"
+              description="Display SVG or image file.">
+          <add-to-group group-id="ProjectViewPopupMenu" anchor="first"/>
+      </action>
+
+  </actions>
+
+    <project-components>
+        <component>
+            <implementation-class>com.intellij.codeInsight.intention.ConditionalOperatorConvertor</implementation-class>
+        </component>
+        <component>
+            <implementation-class>org.ideaplugins.svgviewer.controller.project.SvgViewerProjectComponentEmbed</implementation-class>
+        </component>
+    </project-components>
+
+    <extensions defaultExtensionNs="com.intellij">
+      <intentionAction>
+          <className>com.intellij.codeInsight.intention.ConditionalOperatorConvertor</className>
+          <category>Conditional Operator</category>
+          <descriptionDirectoryName>ConditionalOperatorConvertor</descriptionDirectoryName>
+      </intentionAction>
+
+      <intentionAction>
+          <className>com.applego.sequent.plugin.action.LinkClassInCurrentEditorToActorAction</className>
+          <category>Comments</category>
+          <descriptionDirectoryName>LinkActorToClassInCurrentEditor</descriptionDirectoryName>
+      </intentionAction>
+
+      <intentionAction>
+          <className>com.applego.sequent.plugin.action.SelectClassToLinkToActorAction</className>
+          <category>Comments</category>
+          <!--<descriptionDirectoryName>LinkActorToClassSelectedInDialogAction</descriptionDirectoryName>-->
+      </intentionAction>
+
+      <toolWindow id="Sequent" icon="/images/sequent13.gif" anchor="right"
+                    factoryClass="com.applego.sequent.plugin.ui.SequentToolWindowFactory"/>
+        <fileTypeFactory implementation="org.plantuml.idea.lang.PlantUmlTypeFactory"/>
+        <lang.parserDefinition language="PUML"
+                               implementationClass="org.plantuml.idea.lang.PlantUmlParserDefinition"/>
+  </extensions>
+
+</idea-plugin>
