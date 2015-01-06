@@ -10,7 +10,7 @@ import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;
-import org.plantuml.idea.action.SelectPageAction;
+//import org.plantuml.idea.action.SelectPageAction;
 import org.plantuml.idea.plantuml.PlantUml;
 import org.plantuml.idea.plantuml.PlantUmlResult;
 import org.plantuml.idea.util.LazyApplicationPoolExecutor;
@@ -60,12 +60,12 @@ public class ImageViewerPanel extends AbstractDiagramViewer implements PagingDia
         JScrollPane scrollPane = new JBScrollPane(imageLabel);
         add(scrollPane, BorderLayout.CENTER);
 
-        setSelectPageAction((SelectPageAction) ActionManager.getInstance().getAction("PlantUML.SelectPage"));
+        //setSelectPageAction((SelectPageAction) ActionManager.getInstance().getAction("PlantUML.SelectPage"));
     }
 
     public boolean renderRequired(String newSource) {
-        if (newSource.isEmpty())
-            return false;
+//        if (newSource.isEmpty())
+//            return false;
         if (!newSource.equals(cachedSource) || getPage() != cachedPage || zoom != cachedZoom) {
             cachedSource = newSource;
             cachedPage = getPage();
@@ -76,8 +76,8 @@ public class ImageViewerPanel extends AbstractDiagramViewer implements PagingDia
     }
 
     public void renderWithBaseDir(Project myProject, String source, File baseDir, int pageNum) {
-        if (source.isEmpty())
-            return;
+//        if (source.isEmpty())
+//            return;
         PlantUmlResult result = PlantUml.render(source, baseDir, imageFormat, pageNum);
         try {
             final BufferedImage image = UIUtils.getBufferedImage(result.getDiagramBytes());

@@ -1,5 +1,7 @@
 package com.applego.sequent.plugin.action;
 
+import com.applego.sequent.plugin.util.PsiUtils;
+import com.applego.sequent.plugin.util.UIUtils;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -15,9 +17,6 @@ import com.intellij.psi.javadoc.PsiDocComment;
 import com.intellij.psi.javadoc.PsiDocTag;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.generate.tostring.element.ElementFactory;
-import org.plantuml.idea.util.PsiUtils;
-import org.plantuml.idea.util.UIUtils;
 
 /**
  * Created by pin on 25.11.14.

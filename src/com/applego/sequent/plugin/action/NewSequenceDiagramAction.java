@@ -1,20 +1,31 @@
 package com.applego.sequent.plugin.action;
 
-import com.intellij.ide.IdeView;
+import com.applego.sequent.plugin.util.template.PumlCreateFromTemplateHandler;
+import com.intellij.ide.fileTemplates.FileTemplate;
+import com.intellij.ide.fileTemplates.FileTemplateManager;
+import com.intellij.ide.fileTemplates.FileTemplateUtil;
+import com.intellij.ide.fileTemplates.JavaTemplateUtil;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.editor.Document;
-import com.intellij.openapi.editor.EditorFactory;
-import com.intellij.openapi.fileChooser.FileChooser;
-import com.intellij.openapi.fileChooser.FileChooserDescriptor;
-import com.intellij.openapi.fileEditor.impl.FileDocumentManagerImpl;
+import com.intellij.openapi.fileTypes.FileType;
+import com.intellij.openapi.fileTypes.FileTypeManager;
+import com.intellij.openapi.fileTypes.FileTypes;
+import com.intellij.openapi.fileTypes.UnknownFileType;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.vfs.VirtualFile;
-import com.intellij.psi.PsiDirectory;
+import com.intellij.openapi.ui.Messages;
+import com.intellij.psi.*;
+import com.intellij.psi.impl.file.PsiDirectoryFactory;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Properties;
 
 /**
  * Created by pin on 16.11.14.
  */
 public class NewSequenceDiagramAction extends SequentAction {
+    final static String defaultTemplateName = "/templates/UMLSequence.puml.ft";
+    final static String templateName = "UML Sequence";
+
     @Override
     protected boolean isEnabled() {
         return true;
@@ -23,45 +34,91 @@ public class NewSequenceDiagramAction extends SequentAction {
     public void actionPerformed(AnActionEvent e) {
         logger.debug("NewSequenceDiagramAction action is being performed...");
 
-        Project project = e.getData(PlatformDataKeys.PROJECT);
-        /*
-            ToolWindow toolWindow = e.getData(PlatformDataKeys.TOOL_WINDOW);
-            PsiElement psiElement = e.getData(PlatformDataKeys.PSI_ELEMENT);
-            Navigatable navigatable = e.getData(PlatformDataKeys.NAVIGATABLE);
-            PsiFile psiFile = e.getData(PlatformDataKeys.PSI_FILE);
-        */
+        Project  project = e.getData(PlatformDataKeys.PROJECT);
+        FileType puml = FileTypeManager.getInstance().getFileTypeByExtension("puml");
+        FileType realFileType = puml == UnknownFileType.INSTANCE ? FileTypes.PLAIN_TEXT : puml;
+        PsiDirectory baseDir = PsiDirectoryFactory.getInstance(project).createDirectory(project.getBaseDir());
+        // From a VirtualFile: PsiManager.getInstance(project).findFile()
+        // From a Document: PsiDocumentManager.getInstance(project).getPsiFile()
 
-        // 1. Get Template for Type (Sequence for now)
-        // 2. Create Document with template text
-        // 3. Create VirtualFile from Document ???
-        // Add the plant to the toolWindow
+        //athManager.getSystemPath() + File.separatorChar + "extResources";
+        //final File dir = new File(myResourcePath);
+        //dir.mkdirs();
 
+        // Prepare file name
+        boolean fileNameValid = false;
+        Boolean canOverwrite = Boolean.TRUE;
+        String fileName = "sequence." + realFileType.getDefaultExtension();
+        while (!fileNameValid) {
+            fileName = Messages.showInputDialog(project,
+                    "New diagram name",
+                    "New diagram",
+                    null,
+                    fileName,
+                    null
+            );
 
-        FileChooserDescriptor fcd = new FileChooserDescriptor(false, true, false, false, false, false);
-        VirtualFile vf = FileChooser.chooseFile(fcd, project, project.getBaseDir());
+            if (fileName == null) {
+                logger.debug("User stopped new diagram creation by canceling file name input dialog.");
+                return;
+            }
 
-/*
-        final Project project2 = CommonDataKeys.PROJECT.getData(dataContext);
-        logger.debug("project2 = " + project2);
-*/
-
-        DataContext dataContext = e.getDataContext();
-        final IdeView view = LangDataKeys.IDE_VIEW.getData(dataContext);
-        if (view == null) {
+            if (!"".equals(fileName)) {
+                // TODO-PZA: Use Settings: Diagrams folder or Usecurrently edited class folder(ifany).
+                PsiFile existingFile = baseDir.findFile(fileName);
+                if (existingFile != null) {
+                //}
+                //DOESNT WORK:  if (FilenameIndex.getFilesByName(project, fileName, GlobalSearchScope.projectScope(project)) == null) {
+                //              if (LocalFileSystem.getInstance().findFileByPath(baseDir.getText() + File.separator + fileName) != null) {
+                    int reaction = Messages.showYesNoCancelDialog(project,
+                            "File already exists. Overwrite?",
+                            "New Sequence Diagram",
+                            "Yes",
+                            "No",
+                            "Cancel",
+                            Messages.getQuestionIcon());
+                    if (reaction == 0) {
+                        // YES - replace
+                        canOverwrite = Boolean.TRUE;
+                        existingFile.delete();
+                        break;
+                    } else if (reaction == 1) {
+                        // NO - DoNot replace,ask for new name
+                    } else if (reaction == 2) {
+                        //CANCEL - Stop askin adndontcreate new diagram
+                        // TODO-PZA: Continue asking for new file name
+                        fileName = null;
+                        fileNameValid = true;
+                    }
+                } else {
+                    fileNameValid = true;
+                }
+            }
+        }
+        if (fileName == null) {
             return;
         }
-        final PsiDirectory dir = view.getOrChooseDirectory();
-        if (dir == null || project == null) return;
 
-        String inputText = ""; // TODO-PZA-get form Sequence diagram template
+        Properties properties = new Properties(FileTemplateManager.getInstance().getDefaultProperties());
+        properties.put(PumlCreateFromTemplateHandler.CAN_OVERWRITE, canOverwrite);
+        // TODO-PZA: Add properties as needed
+        final FileTemplate template = FileTemplateManager.getInstance().getTemplate(templateName);
+        if (template == null) {
+            // TODO-PZA: create/insert template if missing
+        }
+        JavaTemplateUtil.setPackageNameAttribute(properties, baseDir);
 
-        final EditorFactory factory = EditorFactory.getInstance();
-        final Document doc = factory.createDocument(inputText);
-/*
-        FileDocumentManagerImpl.registerDocument(doc, vf); // ???
-*/
+        // Create Psi file from template
+        PsiElement  psiElement = null;
+        try {
+            psiElement = FileTemplateUtil.createFromTemplate(template, fileName, properties, baseDir);
+            logger.debug("PsiElement.text=" + psiElement.getText());
+        } catch (Exception e1) {
+            Messages.showErrorDialog(project, e1.getMessage(), "New Sequence");
+            e1.printStackTrace();
+        }
 
-        getToolWindow().addPlant(vf, project);
-
+        // Add the plant to the toolWindow
+        getToolWindow().addPlant(((PsiFile)psiElement).getVirtualFile(), project);
     }
 }

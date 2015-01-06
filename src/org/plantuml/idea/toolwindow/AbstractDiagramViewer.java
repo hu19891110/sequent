@@ -4,7 +4,7 @@ import com.applego.sequent.plugin.ui.PlantUmlDiagramTool;
 import com.applego.sequent.plugin.ui.SourceProvider;
 import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.project.Project;
-import org.plantuml.idea.action.SelectPageAction;
+//import org.plantuml.idea.action.SelectPageAction;
 import org.plantuml.idea.util.LazyApplicationPoolExecutor;
 import org.plantuml.idea.util.UIUtils;
 
@@ -20,7 +20,7 @@ public abstract class AbstractDiagramViewer extends JPanel implements PlantUmlDi
     private int page = 0;
     private int numPages = 1;
     private LazyApplicationPoolExecutor lazyExecutor = new LazyApplicationPoolExecutor();
-    private SelectPageAction selectPageAction;
+  //  private SelectPageAction selectPageAction;
 
     protected AbstractDiagramViewer(LayoutManager layout, SourceProvider sourceProvider) {
         super(layout);
@@ -63,7 +63,7 @@ public abstract class AbstractDiagramViewer extends JPanel implements PlantUmlDi
     public void setPage(Project myProject, int page) {
         if (page >= 0 && page < numPages) {
             this.page = page;
-            selectPageAction.setPage(page);
+    //        selectPageAction.setPage(page);
             renderLater(myProject);
         }
     }
@@ -82,10 +82,10 @@ public abstract class AbstractDiagramViewer extends JPanel implements PlantUmlDi
         this.numPages = numPages;
         if (page >= numPages)
             setPage(myProject, numPages - 1);
-        selectPageAction.setNumPages(numPages);
+      //  selectPageAction.setNumPages(numPages);
     }
 
-    public void setSelectPageAction(SelectPageAction selectPageAction) {
-        this.selectPageAction = selectPageAction;
-    }
+    //public void setSelectPageAction(SelectPageAction selectPageAction) {
+    //    this.selectPageAction = selectPageAction;
+    //}
 }

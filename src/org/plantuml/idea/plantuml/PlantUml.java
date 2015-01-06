@@ -2,7 +2,7 @@ package org.plantuml.idea.plantuml;
 
 import net.sourceforge.plantuml.*;
 import net.sourceforge.plantuml.core.Diagram;
-import org.plantuml.idea.lang.settings.PlantUmlSettings;
+//import org.plantuml.idea.lang.settings.PlantUmlSettings;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -23,7 +23,7 @@ public class PlantUml {
 
     static {
         // Make sure settings are loaded and applied before we start rendering.
-        PlantUmlSettings.getInstance();
+  //      PlantUmlSettings.getInstance();
     }
 
     public enum ImageFormat {

@@ -21,17 +21,15 @@ import com.intellij.openapi.project.ProjectManager;
 import com.intellij.openapi.project.ProjectManagerListener;
 import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.psi.PsiElement;
-import com.intellij.psi.PsiFile;
-import com.intellij.psi.util.PsiUtilBase;
 import com.intellij.ui.JBSplitter;
 import com.intellij.util.messages.MessageBus;
 import org.ideaplugins.svgviewer.view.SvgViewerPanel;
-import org.jetbrains.annotations.NotNull;
 import org.plantuml.idea.lang.PlantUmlFileType;
 import org.plantuml.idea.plantuml.PlantUml;
 import org.plantuml.idea.toolwindow.ImageViewerPanel;
 import org.plantuml.idea.util.UIUtils;
+
+import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
 import javax.swing.event.AncestorEvent;
@@ -178,7 +176,6 @@ public class SequentToolWindow extends JPanel implements PlantumUmlToolsProvider
             @Override
             public void mouseClicked(MouseEvent e) {
                 tabbedPane.remove(panel);
-                //tabbedPane.
             }
         });
 
@@ -311,49 +308,53 @@ public class SequentToolWindow extends JPanel implements PlantumUmlToolsProvider
         public void editorCreated(@NotNull EditorFactoryEvent event) {
             Editor editor = event.getEditor();
             Document doc = editor.getDocument();
+            final Project eventProject = event.getEditor().getProject();
             final VirtualFile vfile = FileDocumentManager.getInstance().getFile(doc);
             if ( vfile != null ) {
                 String fileExtension = vfile.getExtension();
                 logger.debug("Opened editor for file with extension: " + fileExtension);
 
                 if(PlantUmlFileType.PLANTUML_EXT.equalsIgnoreCase(fileExtension)) {
-                    editor.addEditorMouseListener(
-                            new EditorMouseAdapter() {
+                    editor.getContentComponent().addMouseListener(
+                            new MouseAdapter() {
+
                                 @Override
-                                public void mousePressed(EditorMouseEvent e) {
+                                public void mousePressed(MouseEvent e) {
                                     super.mousePressed(e);
                                 }
 
                                 @Override
-                                public void mouseEntered(EditorMouseEvent e) {
-                                    logger.debug("Mouse " + ((e.getMouseEvent().getButton() == 1) ? "left":"right") + " button pressed in PUML editor");
+                                public void mouseReleased(MouseEvent e) {
+                                    super.mouseReleased(e);
                                 }
 
-                                public void mouseClicked(EditorMouseEvent e){
-                                    logger.debug("Mouse " + ((e.getMouseEvent().getButton() == 1) ? "left":"right") + " button clicked in PUML editor");
+                                public void mouseClicked(MouseEvent e) {
+                                    logger.debug("Mouse " + ((e.getButton() == 1) ? "left" : "right") + " button clicked in PUML editor");
                                     // TODO-PZA-Make selection of message (arrows) work at PUML language level.
-                                    MouseEvent mouseEvent = e.getMouseEvent();
+                                    MouseEvent mouseEvent = e; //.getMouseEvent();
                                     Point point = new Point(mouseEvent.getPoint());
-                                    Editor editor = e.getEditor();
-                                    LogicalPosition pos = editor.xyToLogicalPosition(point);
-                                    int offset = editor.logicalPositionToOffset(pos);
-                                    int selStart = editor.getSelectionModel().getSelectionStart();
-                                    int selEnd = editor.getSelectionModel().getSelectionEnd();
-                                    logger.debug("Editor offset: " + offset + ", selStart=" + selStart + ", selEnd=" + selEnd);
-                                    editor.getSelectionModel().selectWordAtCaret(true);
-                                    // TODO-PZA-If selected word is an actor
-                                    //editor.getCaretModel().getCaretOffset();
-                                    //file.findReferenceAt(offset)
+                                    Editor editor = UIUtils.getSelectedEditor(eventProject);
+                                    if (editor != null) {
+                                        LogicalPosition pos = editor.xyToLogicalPosition(point);
+                                        int offset = editor.logicalPositionToOffset(pos);
+                                        int selStart = editor.getSelectionModel().getSelectionStart();
+                                        int selEnd = editor.getSelectionModel().getSelectionEnd();
+                                        logger.debug("Editor offset: " + offset + ", selStart=" + selStart + ", selEnd=" + selEnd);
+                                        editor.getSelectionModel().selectWordAtCaret(true);
+                                        // TODO-PZA-If selected word is an actor
+                                        //editor.getCaretModel().getCaretOffset();
+                                        //file.findReferenceAt(offset)
 
-                                    HintManager.getInstance().showInformationHint(editor, "To to assign class to Actor, press Alt+Enter to display class selector dialog");
-                                    //vfile.findReferenceAt();
-                                    //editor.getSelectionModel().selectLineAtCaret();
-                                    RangeHighlighter[] highliters = editor.getMarkupModel().getAllHighlighters();
-                                    logger.debug("highliters = " + highliters);
-                                    //int line, int layer, @Nullable TextAttributes textAttributes
-                                    int currentLineNumber = editor.getDocument().getLineNumber(offset);
-                                    //TextAttributes  textAttributes = editor.getSelectionModel().getTextAttributes();
-                                    //editor.getMarkupModel().addLineHighlighter(currentLineNumber, 10, textAttributes);//ContentComponent().getBaseline()CaretModel().getVisualLineEnd())
+                                        HintManager.getInstance().showInformationHint(editor, "To to assign class to Actor, press Alt+Enter to display class selector dialog");
+                                        //vfile.findReferenceAt();
+                                        //editor.getSelectionModel().selectLineAtCaret();
+                                        RangeHighlighter[] highliters = editor.getMarkupModel().getAllHighlighters();
+                                        logger.debug("highliters = " + highliters);
+                                        //int line, int layer, @Nullable TextAttributes textAttributes
+                                        int currentLineNumber = editor.getDocument().getLineNumber(offset);
+                                        //TextAttributes  textAttributes = editor.getSelectionModel().getTextAttributes();
+                                        //editor.getMarkupModel().addLineHighlighter(currentLineNumber, 10, textAttributes);//ContentComponent().getBaseline()CaretModel().getVisualLineEnd())
+                                    }
                                 }
                             }
                     );
@@ -531,12 +532,22 @@ public class SequentToolWindow extends JPanel implements PlantumUmlToolsProvider
         logger.debug("State of" + e.getSource() + " changed ");
         if (e.getSource() instanceof JTabbedPane) {
             Project project = UIUtils.getProject(this);
-            JTabbedPane tabsPane = (JTabbedPane)e.getSource();
-            Component tabComponent = tabsPane.getSelectedComponent();
-            if (tabComponent instanceof PlantUmlDiagramTool) {
-                ((PlantUmlDiagramTool) tabComponent).renderLater(project);
-            } else if (tabComponent instanceof DataProvider) { // not perfect but ...
-                ((PlantUmlDiagramTool) graphicsTabsPane.getSelectedComponent()).renderLater(project);
+            /*JTabbedPane tabsPane = (JTabbedPane)e.getSource();
+            Component selectedTabComponent = tabsPane.getSelectedComponent();
+            if (selectedTabComponent != null) {
+                if ((selectedTabComponent instanceof PlantUmlDiagramTool) || (selectedTabComponent instanceof DataProvider)) {
+                    ((PlantUmlDiagramTool) selectedTabComponent).renderLater(project);
+                }
+            }*/ //else {
+            // No selected component, lets try all if any
+            if (graphicsTabsPane.getTabCount() > 0) {
+                for (int n=0; n<graphicsTabsPane.getTabCount(); n++) {
+                    Component tabComponent = graphicsTabsPane.getComponent(n);
+                    if ((tabComponent instanceof PlantUmlDiagramTool) || (tabComponent instanceof DataProvider)) {
+                        ((PlantUmlDiagramTool) tabComponent).renderLater(project);
+                    }
+                }
+            //    }
             }
         }
     }

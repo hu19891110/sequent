@@ -1,5 +1,6 @@
 package com.applego.sequent.plugin.action;
 
+import com.applego.sequent.plugin.util.UIUtils;
 import com.intellij.codeInsight.intention.IntentionAction;
 import com.intellij.lang.java.JavaLanguage;
 import com.intellij.openapi.actionSystem.AnActionEvent;
@@ -10,7 +11,6 @@ import com.intellij.psi.PsiDocumentManager;
 import com.intellij.psi.PsiFile;
 import com.intellij.util.IncorrectOperationException;
 import org.jetbrains.annotations.NotNull;
-import org.plantuml.idea.util.UIUtils;
 
 /**
  * Created by pin on 25.11.14.

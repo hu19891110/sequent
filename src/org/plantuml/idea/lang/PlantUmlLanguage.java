@@ -7,6 +7,6 @@ public class PlantUmlLanguage extends Language {
     public static final PlantUmlLanguage INSTANCE = new PlantUmlLanguage();
 
     private PlantUmlLanguage() {
-        super("PUML");
+        super("SEQ"); // PUML
     }
 }
