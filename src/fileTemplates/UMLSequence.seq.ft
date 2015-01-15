@@ -1,7 +1,0 @@
-@startuml
-Participant A
-Participant B
-
-A -> B: Hello B
-B -> A: Hi A
-@enduml
