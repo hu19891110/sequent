@@ -1,8 +1,7 @@
 package org.ideaplugins.svgviewer.view;
 
-import com.applego.sequent.plugin.ui.SourceProvider;
+import com.applego.sequent.ui.SourceProvider;
 import com.intellij.openapi.actionSystem.*;
-import com.intellij.openapi.application.ApplicationManager;
 import com.intellij.openapi.diagnostic.Logger;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Splitter;
@@ -12,14 +11,12 @@ import com.intellij.ui.components.JBScrollPane;
 import org.apache.batik.dom.svg.SAXSVGDocumentFactory;
 import org.apache.batik.util.XMLResourceDescriptor;
 import org.ideaplugins.svgviewer.model.UserAgentListModel;
-import org.plantuml.idea.plantuml.PlantUml;
-import org.plantuml.idea.plantuml.PlantUmlResult;
-import org.plantuml.idea.toolwindow.AbstractDiagramViewer;
-import org.plantuml.idea.util.UIUtils;
+import com.applego.plantuml.PlantUml;
+import com.applego.plantuml.PlantUmlResult;
+import com.applego.sequent.toolwindow.AbstractDiagramViewer;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.StringReader;
 

@@ -1,0 +1,98 @@
+{
+tokens=[
+    OP_SEQ_FOR='->'
+    OP_SEQ_BCK='<-'
+    OP_SEQ_PREF_DOT='-'
+    OP_SEQ_SUFF_DOT='-'
+    OP_SEQ_PREF_CIRC='o'
+    OP_SEQ_PREF_X='x'
+    OP_SEQ_PREF2_OPT='['
+    OP_SEQ_SUFF2_OPT=']'
+    OP_SEQ_SUFF_CIRC='o'
+    OP_SEQ_SUFF_X='x'
+        OP_SEQ_SEPARATOR='=='
+    OP_SEQ_DELAY='...'
+    OP_SEQ_SPACE='|||'
+    OP_SEQ_SPACE_PREF_NUM='||' //aNumberOfPixels||
+    OP_SEQ_SPACE_SUFF_NUM='||'
+    SEP_SEMI=';'
+    KW_STARTUML='@startuml'
+    KW_ENDUML='@enduml'
+    KW_DEFINE='!define'
+    KW_DEFINELONG='!definelong'
+    KW_ENDDEFINELONG='!enddefinelong'
+
+    //comment='regexp://\''
+    COLOR_PREF='#'
+    KW_AS='as'
+/*
+    activate
+    deactivate
+    destroy
+
+    autonumber
+
+    title
+    end title
+
+    legend
+    endlegend
+
+    newpage
+    alt/else
+    opt
+    loop
+    par
+    break
+    critical
+    group, followed by a text to be displayed
+
+    note
+    end note
+
+    hide footbox
+    title Footer removed
+
+    skinparam
+
+    over
+    left of
+    right of
+    as rectangle
+    as hexagon
+    ref over
+    end ref
+    KW_PARTICIPANT='participant'
+    KW_ACTOR='actor'
+    KW_BOUNDARY='boundary'
+    KW_CONTROL='control'
+    KW_ENTITY='entity'
+    KW_DATABASE='database'
+    */
+
+    // simpleFile ::= item_*
+    // private item_ ::= (property|COMMENT|CRLF)
+    // property ::= (KEY? SEPARATOR VALUE?) | KEY
+  ]
+
+  // diagram ::= START END
+
+  parserClass="com.applego.sequent.parser.SequentParser"
+  parserUtilClass="com.applego.sequent.parser.SequentParserUtil"
+
+  extends="com.intellij.extapi.psi.ASTWrapperPsiElement"
+
+  psiClassPrefix="Sequent"
+  psiImplClassSuffix="Impl"
+  psiPackage="com.applego.sequent.parser.psi"
+  psiImplPackage="com.applego.sequent.parser.psi.impl"
+
+  elementTypeHolderClass="com.applego.sequent.parser.psi.SequentTypes"
+  elementTypeClass="com.applego.sequent.parser.psi.SequentElementType"
+  tokenTypeClass="com.applego.sequent.parser.psi.SequentTokenType"
+
+}
+
+simpleFile ::= item_*
+private item_ ::= (property|COMMENT|CRLF)
+property ::= (KEY? SEPARATOR VALUE?) | KEY
