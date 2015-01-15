@@ -1,0 +1,155 @@
+<idea-plugin version="2">
+  <id>com.applego.sequent</id>
+  <name>Sequent</name>
+  <version>0.1</version>
+  <vendor email="pavlin@email.cz" url="http://www.pavlin.org">Pavlin</vendor>
+
+  <description><![CDATA[
+      Enter short description for your plugin here.<br>
+      <em>most HTML tags may be used</em>
+    ]]></description>
+
+  <change-notes><![CDATA[
+      Add change notes here.<br>
+      <em>most HTML tags may be used</em>
+    ]]>
+  </change-notes>
+
+  <!-- please see http://confluence.jetbrains.com/display/IDEADEV/Build+Number+Ranges for description -->
+  <idea-version since-build="131"/>
+
+  <depends>com.intellij.modules.platform</depends>
+  <depends>com.intellij.modules.lang</depends>
+  <!-- Works but unneeded: <depends optional="true">XPathView</depends> -->
+  <!-- Doesn't work: <depends optional="true">SvgViewer2</depends>-->
+
+  <extensions defaultExtensionNs="com.intellij">
+    <!-- Add your extensions here -->
+  </extensions>
+  <!--
+      <application-components>
+            <component>
+                <implementation-class>org.ideaplugins.svgviewer.controller.application.SvgConfiguration</implementation-class>
+            </component>
+      </application-components>
+  -->
+
+  <actions>
+      <group id="Sequent.MarkupActionGroup" class="com.applego.sequent.action.SequentMarkupActionGroup"
+             text="Sequence diagrams markup and metadata actions" description="Sequence diagram metadata actions" icon="/images/sequent13.gif" popup="true">
+
+        <!-- TODO-PZA:Implement
+              <action id="Sequent.LinkToClass" class="com.applego.sequent.action.LinkClassInCurrentEditorToActorAction"
+                      text="Link selected actor to project class" description="Link actor under caret to existing class"
+                      icon="/images/uml.png">
+                  <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt L" second-keystroke="ctrl alt A"/>
+              </action>
+        -->
+          <action id="Sequent.LinkToMethod" class="com.applego.sequent.action.LinkMessageToMethodAction"
+                  text="Link selected message to class method" description="Link message under caret to class method"
+                  icon="/images/uml.png">
+              <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt L" second-keystroke="ctrl alt A"/>
+          </action>
+          <action id="Sequent.CreateClassForActor" class="com.applego.sequent.action.CreateClassForActorAction"
+                  text="Link selected message to class method" description="Link message under caret to class method"
+                  icon="/images/uml.png">
+              <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt L" second-keystroke="ctrl alt A"/>
+          </action>
+          <action id="Sequent.CreateMethodForMessageActor" class="com.applego.sequent.action.CreateMethodForMessageAction"
+                  text="Link selected message to class method" description="Link message under caret to class method"
+                  icon="/images/uml.png">
+              <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt L" second-keystroke="ctrl alt A"/>
+          </action>
+      </group>
+
+      <group id="Sequent.DiagramActionGroup" class="com.applego.sequent.action.SequentDiagramActionGroup"
+             text="Sequent Uml diagram actions" description="Create, Open .. sequent diagram actions" icon="/images/uml.png" popup="true">
+
+        <add-to-group group-id="AnalyzeMenu" anchor="last"/>
+
+        <action id="Sequent.NewSequenceDiagram" class="com.applego.sequent.action.NewSequenceDiagramAction"
+                text="Start new sequence diagram" description="Start new sequence diagram using method under caret"
+                icon="/images/new.png">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt S" second-keystroke="ctrl alt N"/>
+        </action>
+
+        <action id="Sequent.OpenSequenceDiagram" class="com.applego.sequent.action.OpenSequenceDiagramAction"
+                text="Open sequence diagram" description="Open existing sequence diagram"
+                icon="/images/open.png">
+            <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt S" second-keystroke="shift ctrl alt O"/>
+        </action>
+
+          <action id="Sequent.AddParticipant" class="com.applego.sequent.action.AddParticipantToDiagram"
+                  text="Add participant to sequence diagram" description="Add class in selected editor as participant to the current sequence diagram"
+                  icon="/images/uml.png">
+              <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt S" second-keystroke="shift ctrl alt P"/>
+          </action>
+          <action id="Sequent.AddMessage" class="com.applego.sequent.action.AddMessageToSequenceDiagram"
+                  text="Add message to sequence diagram" description="Add method under caret as message to the current sequence diagram"
+                  icon="/images/uml.png">
+              <keyboard-shortcut keymap="$default" first-keystroke="shift ctrl alt S" second-keystroke="shift ctrl alt M"/>
+          </action>
+      </group>
+
+    <!-- What the hell?ххххххххххххххххххххх
+          <group id="PlantUML.Toolbar" description="PlantUML toolbar">
+              <action id="PlantUML.CopyToClipboard" description="Copy current diagram to clipboard"
+                      class="com.applego.plugin.idea.action.CopyDiagramToClipboardAction"
+                      icon="/actions/copy.png" text="Copy current diagram to clipboard"
+                      />
+              <action id="PlantUML.SaveToFile" description="Save current diagram only"
+                      class="com.applego.plugin.idea.action.SaveDiagramToFileAction"
+                      icon="/actions/menu-saveall.png" text="Save current diagram only"/>
+              <action id="PlantUML.SaveAllToFile" description="Save all diagrams"
+                      class="com.applego.plugin.idea.action.SaveAllDiagramToFileAction"
+                      icon="/actions/export.png" text="Save all diagrams in current file"/>
+              <separator/>
+
+              <action id="PlantUML.ZoomIn" description="Zoom In" class="com.applego.plugin.idea.action.ZoomInAction"
+                      icon="/graph/zoomIn.png" text="Zoom In"/>
+              <action id="PlantUML.ZoomOut" description="Zoom In" class="com.applego.plugin.idea.action.ZoomOutAction"
+                      icon="/graph/zoomOut.png" text="Zoom Out"/>
+              <action id="PlantUML.ZoomActual" description="Actual Zoom" class="com.applego.plugin.idea.action.ZoomActualAction"
+                      icon="/graph/actualZoom.png" text="Actual Zoom"/>
+              <separator/>
+          </group>
+    -->
+
+  </actions>
+
+    <!-- An other way to initialize per project:
+        <project-components>
+            <component>
+                <implementation-class>org.ideaplugins.svgviewer.controller.project.SvgViewerProjectComponentEmbed</implementation-class>
+            </component>
+        </project-components>
+    -->
+
+    <extensions defaultExtensionNs="com.intellij">
+      <intentionAction>
+          <className>com.applego.sequent.action.LinkClassInCurrentEditorToActorAction</className>
+          <category>Comments</category>
+          <descriptionDirectoryName>LinkActorToClassInCurrentEditor</descriptionDirectoryName>
+      </intentionAction>
+
+      <intentionAction>
+          <className>com.applego.sequent.action.SelectClassToLinkToActorAction</className>
+          <category>Comments</category>
+          <!--<descriptionDirectoryName>LinkActorToClassSelectedInDialogAction</descriptionDirectoryName>-->
+      </intentionAction>
+
+      <toolWindow id="Sequent"
+                  icon="/images/sequent13.gif"
+                  anchor="right"
+                  factoryClass="com.applego.sequent.ui.SequentToolWindowFactory"
+      />
+
+      <fileTypeFactory implementation="com.applego.sequent.lang.PlantUmlTypeFactory"
+      />
+
+      <lang.parserDefinition language="SEQ"
+                             implementationClass="com.applego.sequent.lang.PlantUmlParserDefinition"
+      />
+  </extensions>
+
+</idea-plugin>
